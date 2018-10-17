@@ -17,22 +17,18 @@
 class Puzzel {
 	std::string	state_map;
 	uint32_t	size;
-
-	uint32_t	heuristic( void );
+	std::pair<uint32_t, uint32_t> emptyIndex;
 
 public:
-	uint8_t		move_to_parent;
-
-	~Puzzel() {};
 	Puzzel() {};
-	Puzzel(std::string state_map, uint32_t g_score, uint8_t move_to_parent);
+	~Puzzel() {};
 	Puzzel(std::string state_map, uint32_t size);
 
 	std::pair<uint32_t, uint32_t>	getEmptyIndex() const;
-	int							getInvCount(const std::string) const;
-	uint32_t					getSize() const;
-	int							getCell(const uint32_t, const uint32_t) const;
-	std::string					setCell(const std::pair<uint32_t, uint32_t> &, const int value);
+	void							setEmptyIndex(const std::pair<uint32_t, uint32_t> &);
+	uint32_t						getSize() const;
+	int								getCell(const uint32_t, const uint32_t) const;
+	void							setCell(const std::pair<uint32_t, uint32_t> &, const int value);
 
 	std::unique_ptr<std::vector<int> >	makeVector( void ) const;
 

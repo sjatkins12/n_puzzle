@@ -19,9 +19,7 @@ int		check_line(std::string line) {
 }
 
 int		check_digits(std::string line, int dim) {
-	// std::cout << line + " Counting Words... " << std::flush;
-	int words = CountWords(line);
-	// std::cout << words << std::endl;
+	auto words = CountWords(line);
 
 	if (words != dim)
 	{
@@ -60,7 +58,6 @@ int			get_dimmension(std::ifstream & f_stream) {
 	while (!dim && std::getline(f_stream, line))
 	{
 		line = line.substr(0, line.find('#'));
-		// std::cout << line << std::endl << std::flush;
 		if (check_line(line) == EXIT_FAILURE) {
 			std::cout << "Error: cannot get dimmension!" << std::endl;
 			f_stream.close();
@@ -97,41 +94,3 @@ std::unique_ptr<Puzzel> 	parser(const char *file) {
 		std::cout << "Bad File" << std::endl;
 	return (std::make_unique<Puzzel>(combined, dim));
 }
-
-// int main(int argc, char ** argv) {
-
-// 	if (argc != 2)
-// 	{
-// 		std::cout << "Usage: ./parser Puzzle File" << std::endl;
-// 		exit(0);
-// 	}
-// 	std::string	from_p = parser(argv[1]);
-// 	printf("Num Words: %d\nfrom p: %s\n",CountWords(from_p), from_p.c_str());
-
-// 	Puzzel p = Puzzel(from_p, 1, 0);
-// 	p.print_board();
-// 	std::cout << "_________________________" << std::endl;
-// 	std::cout << std::endl;
-
-// 	AI ai = AI(from_p);
-// 	std::stack<Puzzel> stk = ai.solve();
-// 	std::cout << "Printing moves" << std::endl;
-// 	while (!stk.empty()) {
-// 		p = stk.top();
-// 		stk.pop();
-// 		p.print_board();
-// 		std::cout << "_________________________" << std::endl;	
-// 	}
-// 	exit(0);
-// 	std::vector<Puzzel> c;
-// 	c = p.generate_children();
-// 	std::priority_queue<Puzzel, std::vector<Puzzel>> q;
-// 	for (int i = 0; i < c.size(); i++) {
-// 		c[i].print_board();
-// 		std::cout << "FSCORE: " << c[i].get_f_score() << std::endl;
-// 		q.push(c[i]);
-// 		std::cout << std::endl;
-// 	}
-// 	p = q.top();
-// 	p.print_board();
-// }

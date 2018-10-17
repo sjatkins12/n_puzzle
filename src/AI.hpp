@@ -21,12 +21,12 @@ struct PuzzleState {
 class AI {
 	std::unique_ptr<Puzzel> start;
 	std::unique_ptr<Puzzel> finish;
+	std::unordered_map<int32_t, std::pair<int32_t, int32_t> >	finish_map;
 
 	void					generate_children(PuzzleState &) const;
 	int						heuristic(const Puzzel & current, const Puzzel & goal) const;
-	std::unordered_map<int32_t, std::pair<int32_t, int32_t> >	finish_map;
-	std::unique_ptr<std::stack<std::string> >					retrace(PuzzleState p) const;
-	int			getInvCount( void ) const ;
+	int						getInvCount( void ) const ;
+	std::unique_ptr<std::stack<std::string> >	retrace(PuzzleState p) const;
 
 	AI();
 	AI & operator=(const AI& src);
@@ -35,8 +35,9 @@ class AI {
 public:
 	AI(std::unique_ptr<Puzzel> && start, std::unique_ptr<Puzzel> && finish);
 	~AI() {};
+	
 	std::unique_ptr<std::stack<std::string> >	solve() const ;
-	bool				isSolvable( void ) const;
+	bool										isSolvable( void ) const;
 	
 	const int upMove = 0;
 	const int downMove = 1;

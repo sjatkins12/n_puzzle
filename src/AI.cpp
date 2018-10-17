@@ -13,17 +13,6 @@ AI::AI(std::unique_ptr<Puzzel> && start, std::unique_ptr<Puzzel> && finish) {
 	}
 }
 
-std::unique_ptr<std::stack<std::string> >	AI::retrace(PuzzleState p) const {
-	std::unique_ptr<std::stack<std::string> > stk = std::make_unique<std::stack<std::string> >();
-
-	stk->push(p.p.toString());
-	while (p.move != -1) {
-		p = *p.parent;
-		stk->push(p.p.toString());
-	}
-	return (std::move(stk));
-}
-
 std::unique_ptr<std::stack<std::string> >	AI::solve( void ) const {
 	std::priority_queue<PuzzleState> open;
 	std::unordered_map<std::string, bool> visited;
@@ -53,6 +42,7 @@ std::unique_ptr<std::stack<std::string> >	AI::solve( void ) const {
 	return (retrace(open.top()));
 }
 
+
 void		AI::generate_children(PuzzleState & parent) const {
 	std::shared_ptr<PuzzleState> parentPtr = std::make_shared<PuzzleState>(parent);
 
@@ -79,15 +69,23 @@ int			AI::heuristic(const Puzzel & current, const Puzzel & goal) const {
 	return (h);
 }
 
-bool operator<(const PuzzleState &rhs, const PuzzleState &lhs) {
-	return (lhs.f < rhs.f);
+std::unique_ptr<std::stack<std::string> >	AI::retrace(PuzzleState p) const {
+	std::unique_ptr<std::stack<std::string> > stk = std::make_unique<std::stack<std::string> >();
+
+	stk->push(p.p.toString());
+	while (p.move != -1) {
+		p = *p.parent;
+		stk->push(p.p.toString());
+	}
+	return (std::move(stk));
 }
 
 bool					AI::isSolvable( void ) const {
-	int					inv_count = getInvCount();
+	auto	inv_count = getInvCount();
 
-	return ( (start->getSize() % 2) && !(inv_count % 2) )
-			|| ( !(start->getSize() % 2) && ( ((start->getEmptyIndex().first + 1) % 2) == !(inv_count % 2) ) );
+	return ((start->getSize() == finish->getSize()) && 
+			( ((start->getSize() % 2) && !(inv_count % 2) ) || 
+			(!(start->getSize() % 2) && ( ((start->getEmptyIndex().first + 1) % 2) == !(inv_count % 2) )) ));
 }
 
 int			AI::getInvCount( void ) const {
@@ -103,4 +101,9 @@ int			AI::getInvCount( void ) const {
 		}
 	}
 	return (invCount);
+}
+
+/* PuzzleState Operator Overload */
+bool operator<(const PuzzleState &rhs, const PuzzleState &lhs) {
+	return (lhs.f < rhs.f);
 }
