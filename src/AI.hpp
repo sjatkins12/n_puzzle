@@ -4,13 +4,13 @@
 
 #include <string>
 #include <unordered_map>
-#include "puzzel.hpp"
+#include "puzzle.hpp"
 #include <queue>
 #include <stack>
 #include <iostream>
 
 struct PuzzleState {
-	Puzzel	p;
+	Puzzle	p;
 	std::shared_ptr<PuzzleState> parent;
 	std::vector<PuzzleState> children;
 	int	f;
@@ -19,12 +19,12 @@ struct PuzzleState {
 };
 
 class AI {
-	std::unique_ptr<Puzzel> start;
-	std::unique_ptr<Puzzel> finish;
-	std::unordered_map<int32_t, std::pair<int32_t, int32_t> >	finish_map;
+	std::unique_ptr<Puzzle> _start;
+	std::unique_ptr<Puzzle> _finish;
+	std::unordered_map<int32_t, std::pair<int32_t, int32_t> >	_finish_map;
 
 	void					generate_children(PuzzleState &) const;
-	int						heuristic(const Puzzel & current, const Puzzel & goal) const;
+	int						heuristic(const Puzzle & current, const Puzzle & goal) const;
 	int						getInvCount( void ) const ;
 	std::unique_ptr<std::stack<std::string> >	retrace(PuzzleState p) const;
 
@@ -33,7 +33,7 @@ class AI {
 	AI(const AI& src);
 
 public:
-	AI(std::unique_ptr<Puzzel> && start, std::unique_ptr<Puzzel> && finish);
+	AI(std::unique_ptr<Puzzle> && start, std::unique_ptr<Puzzle> && finish);
 	~AI() {};
 	
 	std::unique_ptr<std::stack<std::string> >	solve() const ;

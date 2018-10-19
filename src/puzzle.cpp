@@ -1,176 +1,146 @@
-#include "puzzel.hpp"
+#include "puzzle.hpp"
 #include "utils.hpp"
+#include <sstream>
 
-Puzzel::Puzzel(std::string state_map, uint32_t size) {
-	this->state_map = state_map;
-	this->size = size;
+Puzzle::Puzzle(std::string state_map, uint32_t size) {
+	this->_state_map = state_map;
+	this->_size = size;
 
-	for (auto i = 0; i < getSize(); i++) {
-		for (auto j = 0; j < getSize(); j++) {
+	for (auto i = 0; i < _size; i++) {
+		for (auto j = 0; j < _size; j++) {
 			if (getCell(i, j) == 0) {
-				emptyIndex = std::make_pair<uint32_t, uint32_t>(i, j);	
-				i = getSize();
+				this->_emptyIndex = std::make_pair<uint32_t, uint32_t>(i, j);	
+				i = _size;
 				break ;
 			}
 		}
 	}
 }
 
-Puzzel	Puzzel::upMove() const {
-	Puzzel cpyPuzzel = Puzzel(*this);
+int		Puzzle::getCell(const uint32_t row, const uint32_t col) const {
+	auto strStream = std::istringstream(_state_map);
+	int indexValue;
 
-	auto emptyIndex = getEmptyIndex();
-	cpyPuzzel.setCell(std::make_pair<int, int>(emptyIndex.first - 1, emptyIndex.second), 0);
-	cpyPuzzel.setCell(emptyIndex, getCell(emptyIndex.first - 1, emptyIndex.second));
-	cpyPuzzel.setEmptyIndex(std::make_pair<int, int>(emptyIndex.first - 1, emptyIndex.second));
-	
-	return (cpyPuzzel);
+	for (auto i = 0; i <= (row * _size) + col; i++) {
+		strStream >> indexValue;
+	}
+	return (indexValue);
 }
 
-Puzzel	Puzzel::downMove() const {
-	Puzzel cpyPuzzel = Puzzel(*this);
-
-	auto emptyIndex = getEmptyIndex();
-	cpyPuzzel.setCell(std::make_pair<int, int>(emptyIndex.first + 1, emptyIndex.second), 0);
-	cpyPuzzel.setCell(emptyIndex, getCell(emptyIndex.first + 1, emptyIndex.second));
-	cpyPuzzel.setEmptyIndex(std::make_pair<int, int>(emptyIndex.first + 1, emptyIndex.second));
-	
-	return (cpyPuzzel);
-}
-
-Puzzel	Puzzel::leftMove() const {
-	Puzzel cpyPuzzel = Puzzel(*this);
-
-	auto emptyIndex = getEmptyIndex();
-	cpyPuzzel.setCell(std::make_pair<int, int>(emptyIndex.first, emptyIndex.second - 1), 0);
-	cpyPuzzel.setCell(emptyIndex, getCell(emptyIndex.first, emptyIndex.second - 1));
-	cpyPuzzel.setEmptyIndex(std::make_pair<int, int>(emptyIndex.first, emptyIndex.second - 1));
-
-	return (cpyPuzzel);
-}
-
-Puzzel	Puzzel::rightMove() const {
-	Puzzel cpyPuzzel = Puzzel(*this);
-
-	auto emptyIndex = getEmptyIndex();
-	cpyPuzzel.setCell(std::make_pair<int, int>(emptyIndex.first, emptyIndex.second + 1), 0);
-	cpyPuzzel.setCell(emptyIndex, getCell(emptyIndex.first, emptyIndex.second + 1));
-	cpyPuzzel.setEmptyIndex(std::make_pair<int, int>(emptyIndex.first, emptyIndex.second + 1));
-	
-	return (cpyPuzzel);
-}
-
-std::pair<uint32_t, uint32_t>		Puzzel::getEmptyIndex() const {
-	return (emptyIndex);
-}
-
-void	Puzzel::setEmptyIndex(const std::pair<uint32_t, uint32_t> & index) {
-	this->emptyIndex = index;
-}
-
-bool	Puzzel::canUpMove() const {
-	auto emptyIndex = getEmptyIndex();
-
-	return (emptyIndex.first > 0);
-}
-
-bool	Puzzel::canDownMove() const {
-	auto emptyIndex = getEmptyIndex();
-
-	return (emptyIndex.first < getSize() - 1);
-}
-
-bool	Puzzel::canLeftMove() const {
-	auto emptyIndex = getEmptyIndex();
-
-	return (emptyIndex.second > 0);
-}
-
-bool	Puzzel::canRightMove() const {
-	auto emptyIndex = getEmptyIndex();
-
-	return (emptyIndex.second < getSize() - 1);
-}
-
-
-uint32_t	Puzzel::getSize() const {
-	return (size);
-}
-
-int		Puzzel::getCell(const uint32_t row, const uint32_t col) const {
+void		Puzzle::setCell(const std::pair<uint32_t, uint32_t>& cell, const int value) {
 	auto index = 0;
 	auto i = 0;
 
-	for (; i < row; i++) {
-		for (auto cellCount = 0; cellCount < size; cellCount++) {
-			while (state_map[index] == ' ')
-				index++;
-			while (state_map[index] != ' ' && state_map[index] != '\0')
-				index++;
-			while (state_map[index] == ' ')
-				index++;
-		}
-	}
-	for (auto j = 0; j < col; j++) {
-		while (state_map[index] == ' ')
-			index++;
-		while (state_map[index] != ' ' && state_map[index] != '\0')
-			index++;
-		while (state_map[index] == ' ')
-			index++;
-	}
-	return (atoi(&(state_map[index])));
-}
-
-void		Puzzel::setCell(const std::pair<uint32_t, uint32_t>& cell, const int value) {
-	auto index = 0;
-	auto i = 0;
 	for (; i < cell.first; i++) {
-		for (auto cellCount = 0; cellCount < size; cellCount++) {
-			while (state_map[index] == ' ')
+		for (auto cellCount = 0; cellCount < _size; cellCount++) {
+			while (_state_map[index] == ' ')
 				index++;
-			while (state_map[index] != ' ' && state_map[index] != '\0')
+			while (_state_map[index] != ' ' && _state_map[index] != '\0')
 				index++;
-			while (state_map[index] == ' ')
+			while (_state_map[index] == ' ')
 				index++;
 		}
 	}
 	for (auto j = 0; j < cell.second; j++) {
-		while (state_map[index] == ' ')
+		while (_state_map[index] == ' ')
 			index++;
-		while (state_map[index] != ' ' && state_map[index] != '\0')
+		while (_state_map[index] != ' ' && _state_map[index] != '\0')
 			index++;
-		while (state_map[index] == ' ')
+		while (_state_map[index] == ' ')
 			index++;
 	}
 	auto skip = index;
-	while (state_map[skip] != ' ' && state_map[skip] != '\0')
+	while (_state_map[skip] != ' ' && _state_map[skip] != '\0')
 		skip++;
-	state_map = state_map.substr(0, index) + std::to_string(value) + state_map.substr(skip);	
+	_state_map = _state_map.substr(0, index) + std::to_string(value) + _state_map.substr(skip);
 }
 
-std::unique_ptr<std::vector<int> >	Puzzel::makeVector( void ) const {
-	auto index = 0;
-	std::unique_ptr<std::vector<int> > flatVector = std::make_unique<std::vector<int> >();
 
-	for (auto i = 0; i < getSize(); i++) {
-		for (auto cellCount = 0; cellCount < size; cellCount++) {
-			while (state_map[index] == ' ')
-				index++;
-			flatVector->push_back(atoi(&(state_map[index])));
-			while (state_map[index] != ' ' && state_map[index] != '\0')
-				index++;
-			while (state_map[index] == ' ')
-				index++;
-		}
+Puzzle	Puzzle::upMove() const {
+	Puzzle cpyPuzzle = Puzzle(*this);
+
+	cpyPuzzle.setCell(std::make_pair<int, int>(_emptyIndex.first - 1, _emptyIndex.second), 0);
+	cpyPuzzle.setCell(_emptyIndex, getCell(_emptyIndex.first - 1, _emptyIndex.second));
+	cpyPuzzle.setEmptyIndex(std::make_pair<int, int>(_emptyIndex.first - 1, _emptyIndex.second));
+	
+	return (cpyPuzzle);
+}
+
+Puzzle	Puzzle::downMove() const {
+	Puzzle cpyPuzzle = Puzzle(*this);
+
+	cpyPuzzle.setCell(std::make_pair<int, int>(_emptyIndex.first + 1, _emptyIndex.second), 0);
+	cpyPuzzle.setCell(_emptyIndex, getCell(_emptyIndex.first + 1, _emptyIndex.second));
+	cpyPuzzle.setEmptyIndex(std::make_pair<int, int>(_emptyIndex.first + 1, _emptyIndex.second));
+	
+	return (cpyPuzzle);
+}
+
+Puzzle	Puzzle::leftMove() const {
+	Puzzle cpyPuzzle = Puzzle(*this);
+
+	cpyPuzzle.setCell(std::make_pair<int, int>(_emptyIndex.first, _emptyIndex.second - 1), 0);
+	cpyPuzzle.setCell(_emptyIndex, getCell(_emptyIndex.first, _emptyIndex.second - 1));
+	cpyPuzzle.setEmptyIndex(std::make_pair<int, int>(_emptyIndex.first, _emptyIndex.second - 1));
+
+	return (cpyPuzzle);
+}
+
+Puzzle	Puzzle::rightMove() const {
+	Puzzle cpyPuzzle = Puzzle(*this);
+
+	cpyPuzzle.setCell(std::make_pair<int, int>(_emptyIndex.first, _emptyIndex.second + 1), 0);
+	cpyPuzzle.setCell(_emptyIndex, getCell(_emptyIndex.first, _emptyIndex.second + 1));
+	cpyPuzzle.setEmptyIndex(std::make_pair<int, int>(_emptyIndex.first, _emptyIndex.second + 1));
+	
+	return (cpyPuzzle);
+}
+
+std::pair<uint32_t, uint32_t>		Puzzle::getEmptyIndex() const {
+	return (_emptyIndex);
+}
+
+void	Puzzle::setEmptyIndex(const std::pair<uint32_t, uint32_t> & index) {
+	this->_emptyIndex = index;
+}
+
+bool	Puzzle::canUpMove() const {
+	return (_emptyIndex.first > 0);
+}
+
+bool	Puzzle::canDownMove() const {
+	return (_emptyIndex.first < _size - 1);
+}
+
+bool	Puzzle::canLeftMove() const {
+	return (_emptyIndex.second > 0);
+}
+
+bool	Puzzle::canRightMove() const {
+	return (_emptyIndex.second < _size - 1);
+}
+
+
+uint32_t	Puzzle::getSize() const {
+	return (_size);
+}
+
+std::unique_ptr<std::vector<int> >	Puzzle::makeVector( void ) const {
+	auto	flatVectorPtr = std::make_unique<std::vector<int> >();
+	auto	strStream = std::istringstream(_state_map);
+	int		tempNum;
+
+	for (auto i = 0; i < _size * _size; i++) {
+		strStream >> tempNum;
+		flatVectorPtr->push_back(tempNum);
 	}
-	return (std::move(flatVector));
+	return (std::move(flatVectorPtr));
 }
 
-bool	Puzzel::operator==( Puzzel const &rhs ) const {
-	return (rhs.state_map == this->state_map);
+bool	Puzzle::operator==( Puzzle const &rhs ) const {
+	return (rhs._state_map == this->_state_map);
 }
 
-std::string Puzzel::toString( void ) const {
-	return (state_map);
+std::string Puzzle::toString( void ) const {
+	return (_state_map);
 }

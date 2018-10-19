@@ -3,8 +3,9 @@
 #include <string>
 #include <vector>
 #include <queue>
+#include <sstream>
 #include "utils.hpp"
-#include "puzzel.hpp"
+#include "puzzle.hpp"
 #include "AI.hpp"
 
 int		check_line(std::string line) {
@@ -19,9 +20,15 @@ int		check_line(std::string line) {
 }
 
 int		check_digits(std::string line, int dim) {
-	auto words = CountWords(line);
+	auto strStream = std::istringstream(line);
+	int	indexValue;
+	auto	count = 0;
 
-	if (words != dim)
+	while (strStream >> indexValue) {
+		count++;
+	}
+
+	if (count != dim)
 	{
 		std::cout << "Bad Puzzle" << std::endl;
 		return (EXIT_FAILURE);
@@ -69,7 +76,7 @@ int			get_dimmension(std::ifstream & f_stream) {
 	return (dim);
 }
 
-std::unique_ptr<Puzzel> 	parser(const char *file) {
+std::unique_ptr<Puzzle> 	parser(const char *file) {
 	std::ifstream	f_stream(file);
 	std::string		line, combined;
 	int				dim;
@@ -92,5 +99,5 @@ std::unique_ptr<Puzzel> 	parser(const char *file) {
 	}
 	else
 		std::cout << "Bad File" << std::endl;
-	return (std::make_unique<Puzzel>(combined, dim));
+	return (std::make_unique<Puzzle>(combined, dim));
 }

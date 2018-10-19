@@ -8,21 +8,15 @@
 # include <stack>
 # include <stdlib.h>
 
-# define UP_MOVE 1
-# define DOWN_MOVE 2
-# define LEFT_MOVE 3
-# define RIGHT_MOVE 4
-
-
-class Puzzel {
-	std::string	state_map;
-	uint32_t	size;
-	std::pair<uint32_t, uint32_t> emptyIndex;
+class Puzzle {
+	std::string	_state_map;
+	uint32_t	_size;
+	std::pair<uint32_t, uint32_t> _emptyIndex;
 
 public:
-	Puzzel() {};
-	~Puzzel() {};
-	Puzzel(std::string state_map, uint32_t size);
+	Puzzle() {};
+	~Puzzle() {};
+	Puzzle(std::string state_map, uint32_t size);
 
 	std::pair<uint32_t, uint32_t>	getEmptyIndex() const;
 	void							setEmptyIndex(const std::pair<uint32_t, uint32_t> &);
@@ -37,19 +31,13 @@ public:
 	bool				canLeftMove( void ) const;
 	bool				canRightMove( void ) const;
 
-	Puzzel				upMove( void ) const;
-	Puzzel				downMove( void ) const;
-	Puzzel				leftMove( void ) const;
-	Puzzel				rightMove( void ) const;	
+	Puzzle				upMove( void ) const;
+	Puzzle				downMove( void ) const;
+	Puzzle				leftMove( void ) const;
+	Puzzle				rightMove( void ) const;	
 	std::string			toString() const;
-	bool				operator<( Puzzel const &rhs) const ;
-	bool				operator==(Puzzel const &rhs) const ;
+	bool				operator<( Puzzle const &rhs) const ;
+	bool				operator==(Puzzle const &rhs) const ;
 };
-
-// struct	compareFScore {
-// 	bool operator()(Puzzel  & p1, Puzzel  & p2) {
-// 		return (p1.get_f_score() < p2.get_f_score());
-// 	}
-// };
 
 #endif

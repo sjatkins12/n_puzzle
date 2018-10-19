@@ -1,14 +1,14 @@
 #include "AI.hpp"
 
-AI::AI(std::unique_ptr<Puzzel> && start, std::unique_ptr<Puzzel> && finish) {
-	this->start = std::move(start);
-	this->finish = std::move(finish);
+AI::AI(std::unique_ptr<Puzzle> && start, std::unique_ptr<Puzzle> && finish) {
+	this->_start = std::move(start);
+	this->_finish = std::move(finish);
 
-	auto dim = this->finish->getSize();
+	auto dim = this->_finish->getSize();
 	for (auto i = 0; i < dim; i++) {
 		for (auto j = 0; j < dim; j++) {
-			finish_map.insert(std::make_pair<int32_t, std::pair<int32_t, int32_t>>
-			(this->finish->getCell(i, j), std::make_pair<uint, uint>(i , j)));
+			_finish_map.insert(std::make_pair<int32_t, std::pair<int32_t, int32_t>>
+			(this->_finish->getCell(i, j), std::make_pair<uint, uint>(i , j)));
 		}
 	}
 }
@@ -19,14 +19,14 @@ std::unique_ptr<std::stack<std::string> >	AI::solve( void ) const {
 	PuzzleState	current;
 
 	open.push(
-		PuzzleState {*(this->start), nullptr, std::vector<PuzzleState>(), 0, 0, -1}
+		PuzzleState {*(this->_start), nullptr, std::vector<PuzzleState>(), 0, 0, -1}
 	);
 
 	while (!open.empty()) {
 		current = open.top();
 		visited.insert(std::make_pair<std::string, bool>(current.p.toString(), true));
 
-		if (current.p == *finish)
+		if (current.p == *_finish)
 			break ;
 
 		open.pop();
@@ -34,7 +34,7 @@ std::unique_ptr<std::stack<std::string> >	AI::solve( void ) const {
 		generate_children(current);
 		for (auto & child : current.children) {
 			if (visited.count(child.p.toString()) == 0) {
-				child.f = child.g + heuristic(child.p, *(this->finish));
+				child.f = child.g + heuristic(child.p, *(this->_finish));
 				open.push(child);
 			}
 		}
@@ -56,13 +56,13 @@ void		AI::generate_children(PuzzleState & parent) const {
 		parent.children.push_back(PuzzleState {parent.p.rightMove(), parentPtr, std::vector<PuzzleState>(), 0, parent.g + 1, rightMove});
 }
 
-int			AI::heuristic(const Puzzel & current, const Puzzel & goal) const {
+int			AI::heuristic(const Puzzle & current, const Puzzle & goal) const {
 	auto h = 0;
 	auto dim = current.getSize();
 
 	for (auto i = 0; i < dim; i++) {
 		for (auto j = 0; j < dim; j++) {
-			auto goal_position = finish_map.at(current.getCell(i, j));
+			auto goal_position = _finish_map.at(current.getCell(i, j));
 			h += abs(goal_position.first - i) + abs(goal_position.second - j);
 		}
 	}
@@ -83,16 +83,16 @@ std::unique_ptr<std::stack<std::string> >	AI::retrace(PuzzleState p) const {
 bool					AI::isSolvable( void ) const {
 	auto	inv_count = getInvCount();
 
-	return ((start->getSize() == finish->getSize()) && 
-			( ((start->getSize() % 2) && !(inv_count % 2) ) || 
-			(!(start->getSize() % 2) && ( ((start->getEmptyIndex().first + 1) % 2) == !(inv_count % 2) )) ));
+	return ((_start->getSize() == _finish->getSize()) && 
+			( ((_start->getSize() % 2) && !(inv_count % 2) ) || 
+			(!(_start->getSize() % 2) && ( ((_start->getEmptyIndex().first + 1) % 2) == !(inv_count % 2) )) ));
 }
 
 int			AI::getInvCount( void ) const {
 	auto invCount = 0;
-	auto size = start->getSize();
-	auto startVector = start->makeVector();
-	auto finishVector = finish->makeVector();
+	auto size = _start->getSize();
+	auto startVector = _start->makeVector();
+	auto finishVector = _finish->makeVector();
 
 	for (auto i = 0; i < size - 1; i++) {
 		for (auto j = i + 1; j < size; j++) {

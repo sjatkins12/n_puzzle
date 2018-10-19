@@ -1,4 +1,4 @@
-#include "puzzel.hpp"
+#include "puzzle.hpp"
 #include "utils.hpp"
 #include "AI.hpp"
 
@@ -21,8 +21,8 @@ void	print_map(std::string map, uint32_t size) {
 
 int	main(int argc, char const *argv[])
 {
-	std::unique_ptr<Puzzel> start;
-	std::unique_ptr<Puzzel> end;
+	std::unique_ptr<Puzzle> start;
+	std::unique_ptr<Puzzle> end;
 	std::unique_ptr<std::stack<std::string> > move_stk;
 
 	if (argc != 3) {
@@ -33,6 +33,8 @@ int	main(int argc, char const *argv[])
 	start = parser(argv[1]);
 	end = parser(argv[2]);
 	auto size = start->getSize();
+	print_map(start->toString(), 3);
+	std::cout << std::endl;
 
 	AI solver(std::move(start), std::move(end));
 
