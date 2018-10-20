@@ -2,6 +2,12 @@
 
 # define PARSER_H
 
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <vector>
+#include <queue>
+#include <sstream>
 #include <string>
 #include <math.h>
 #include "puzzle.hpp"

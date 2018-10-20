@@ -1,6 +1,5 @@
 #include "puzzle.hpp"
-#include "utils.hpp"
-#include <sstream>
+#include "parser.hpp"
 
 Puzzle::Puzzle(std::string state_map, uint32_t size) {
 	this->_state_map = state_map;

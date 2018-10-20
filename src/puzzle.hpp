@@ -4,6 +4,7 @@
 # include <string>
 # include <math.h>
 # include <iostream>
+# include <sstream>
 # include <vector>
 # include <stack>
 # include <stdlib.h>

@@ -1,10 +1,4 @@
-#include <iostream>
-#include <fstream>
-#include <string>
-#include <vector>
-#include <queue>
-#include <sstream>
-#include "utils.hpp"
+#include "parser.hpp"
 #include "puzzle.hpp"
 #include "AI.hpp"
 
