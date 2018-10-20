@@ -56,19 +56,15 @@ void		Puzzle::setCell(const std::pair<uint32_t, uint32_t>& cell, const int value
 }
 
 
-Puzzle	Puzzle::upMove() const {
-	Puzzle cpyPuzzle = Puzzle(*this);
-
+Puzzle &	Puzzle::upMove(Puzzle && cpyPuzzle) const {
 	cpyPuzzle.setCell(std::make_pair<int, int>(_emptyIndex.first - 1, _emptyIndex.second), 0);
 	cpyPuzzle.setCell(_emptyIndex, getCell(_emptyIndex.first - 1, _emptyIndex.second));
 	cpyPuzzle.setEmptyIndex(std::make_pair<int, int>(_emptyIndex.first - 1, _emptyIndex.second));
-	
+
 	return (cpyPuzzle);
 }
 
-Puzzle	Puzzle::downMove() const {
-	Puzzle cpyPuzzle = Puzzle(*this);
-
+Puzzle &	Puzzle::downMove(Puzzle && cpyPuzzle) const {
 	cpyPuzzle.setCell(std::make_pair<int, int>(_emptyIndex.first + 1, _emptyIndex.second), 0);
 	cpyPuzzle.setCell(_emptyIndex, getCell(_emptyIndex.first + 1, _emptyIndex.second));
 	cpyPuzzle.setEmptyIndex(std::make_pair<int, int>(_emptyIndex.first + 1, _emptyIndex.second));
@@ -76,9 +72,7 @@ Puzzle	Puzzle::downMove() const {
 	return (cpyPuzzle);
 }
 
-Puzzle	Puzzle::leftMove() const {
-	Puzzle cpyPuzzle = Puzzle(*this);
-
+Puzzle &	Puzzle::leftMove(Puzzle && cpyPuzzle) const {
 	cpyPuzzle.setCell(std::make_pair<int, int>(_emptyIndex.first, _emptyIndex.second - 1), 0);
 	cpyPuzzle.setCell(_emptyIndex, getCell(_emptyIndex.first, _emptyIndex.second - 1));
 	cpyPuzzle.setEmptyIndex(std::make_pair<int, int>(_emptyIndex.first, _emptyIndex.second - 1));
@@ -86,9 +80,7 @@ Puzzle	Puzzle::leftMove() const {
 	return (cpyPuzzle);
 }
 
-Puzzle	Puzzle::rightMove() const {
-	Puzzle cpyPuzzle = Puzzle(*this);
-
+Puzzle &	Puzzle::rightMove(Puzzle && cpyPuzzle) const {
 	cpyPuzzle.setCell(std::make_pair<int, int>(_emptyIndex.first, _emptyIndex.second + 1), 0);
 	cpyPuzzle.setCell(_emptyIndex, getCell(_emptyIndex.first, _emptyIndex.second + 1));
 	cpyPuzzle.setEmptyIndex(std::make_pair<int, int>(_emptyIndex.first, _emptyIndex.second + 1));
@@ -143,4 +135,42 @@ bool	Puzzle::operator==( Puzzle const &rhs ) const {
 
 std::string Puzzle::toString( void ) const {
 	return (_state_map);
+}
+
+Puzzle::Puzzle(Puzzle const & p) {
+	this->_state_map = p.toString();
+	this->_size = p.getSize();
+	this->_emptyIndex = p.getEmptyIndex();
+	// std::cout << "COPY" << std::endl;
+}
+
+Puzzle &			Puzzle::operator=(Puzzle const &rhs) {
+	this->_state_map = rhs.toString();
+	this->_size = rhs.getSize();
+	this->_emptyIndex = rhs.getEmptyIndex();
+	// std::cout << "COPY OPERATOR" << std::endl;
+	return (*this);
+}
+
+Puzzle &			Puzzle::operator=(Puzzle &&rhs) {
+	if (&rhs == this)
+		return (*this);
+	this->_state_map = rhs.toString();
+	this->_size = rhs.getSize();
+	this->_emptyIndex = rhs.getEmptyIndex();
+	rhs._state_map = "";
+	rhs._size = 0;
+	rhs._emptyIndex = std::make_pair<int, int>(0,0);
+	// std::cout << "MOVE OPERATOR" << std::endl;
+	return (*this);
+}
+
+Puzzle::Puzzle(Puzzle && rhs) {
+	// std::cout << "WE MOVED" << std::endl;
+	this->_state_map = rhs.toString();
+	this->_size = rhs.getSize();
+	this->_emptyIndex = rhs.getEmptyIndex();
+	rhs._state_map = "";
+	rhs._size = 0;
+	rhs._emptyIndex = std::make_pair<int, int>(0,0);
 }

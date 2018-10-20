@@ -14,6 +14,8 @@ class Puzzle {
 	std::pair<uint32_t, uint32_t> _emptyIndex;
 
 public:
+	Puzzle(Puzzle const &);
+	Puzzle(Puzzle &&);
 	Puzzle() {};
 	~Puzzle() {};
 	Puzzle(std::string state_map, uint32_t size);
@@ -31,13 +33,16 @@ public:
 	bool				canLeftMove( void ) const;
 	bool				canRightMove( void ) const;
 
-	Puzzle				upMove( void ) const;
-	Puzzle				downMove( void ) const;
-	Puzzle				leftMove( void ) const;
-	Puzzle				rightMove( void ) const;	
+	Puzzle	&			upMove( Puzzle && cpyPuzzle ) const;
+	Puzzle	&			downMove( Puzzle && cpyPuzzle ) const;
+	Puzzle	&			leftMove( Puzzle && cpyPuzzle ) const;
+	Puzzle	&			rightMove( Puzzle && cpyPuzzle ) const;	
 	std::string			toString() const;
 	bool				operator<( Puzzle const &rhs) const ;
 	bool				operator==(Puzzle const &rhs) const ;
+	Puzzle &			operator=(Puzzle const &rhs);
+	Puzzle &			operator=(Puzzle &&rhs);
+	
 };
 
 #endif
